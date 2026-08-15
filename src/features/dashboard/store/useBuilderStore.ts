@@ -1,6 +1,6 @@
 
 import { create } from "zustand";
-import { FormDetail } from "../types";
+import { FormDetail, InviteSummary } from "../types";
 import api from "@/lib/http/internal";
 import { FieldDef, FieldType } from "@/server/validation/Field";
 import { cloneSchema, deepEqual, generateFieldId, generateOptionId } from "@/shared/utils";
@@ -33,6 +33,7 @@ interface BuilderState {
   savedSchema: FieldDef[];
   savedTitle: string;
   savedDescription: string | null;
+  invites: InviteSummary[];
   loadForm: (id: string) => Promise<void>;
   setTitle: (title: string) => void;
   setDescription: (description: string | null) => void;
@@ -46,6 +47,12 @@ interface BuilderState {
   reorderFields: (fromIndex: number, toIndex: number) => void;
   selectField: (id: string | null) => void;
   replaceSchema: (schema: FieldDef[]) => void;
+  fetchInvites: () => Promise<void>;
+  sendInvites: (
+    emails: string[]
+  ) => Promise<{ created: InviteSummary[]; skipped: { email: string; reason: string }[]; emailErrors: string[] }>;
+  resendInvite: (email: string) => Promise<{ emailErrors: string[] }>;
+  cancelInvite: (inviteId: string) => Promise<void>;
 }
 
 export const useBuilderStore = create<BuilderState>((set, get) => ({
@@ -56,6 +63,7 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   savedSchema: [],
   savedTitle: "",
   savedDescription: null,
+  invites: [],
   loadForm: async (id: string) => {
     set({ isLoading: true, form: null, selectedFieldId: null });
     const { data } = await api.get<{ form: FormDetail }>(`/v1/forms/${id}`);
@@ -66,6 +74,9 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
       savedDescription: data.form.description,
       isLoading: false,
     });
+    if (data.form.status === "PUBLISHED") {
+      get().fetchInvites();
+    }
   },
 
   setTitle: (title) => set((s) => (s.form ? { form: { ...s.form, title } } : s)),
@@ -143,5 +154,37 @@ export const useBuilderStore = create<BuilderState>((set, get) => ({
   selectField: (id) => set({ selectedFieldId: id }),
 
   replaceSchema: (schema) => set((s) => (s.form ? { form: { ...s.form, schema: cloneSchema(schema) } } : s)),
+  fetchInvites: async () => {
+    const s = get();
+    if (!s.form) return;
+    const { data } = await api.get<{ invites: InviteSummary[] }>(`/v1/forms/${s.form.id}/invites`);
+    set({ invites: data.invites });
+  },
 
+  sendInvites: async (emails) => {
+    const s = get();
+    if (!s.form) throw new Error("no form loaded");
+    const { data } = await api.post<{
+      created: InviteSummary[];
+      skipped: { email: string; reason: string }[];
+      emailErrors: string[];
+    }>(`/v1/forms/${s.form.id}/invites`, { emails });
+    await s.fetchInvites();
+    return data;
+  },
+
+  resendInvite: async (email) => {
+    const s = get();
+    if (!s.form) throw new Error("no form loaded");
+    const { data } = await api.post<{ emailErrors: string[] }>(`/v1/forms/${s.form.id}/invites`, { emails: [email] });
+    await s.fetchInvites();
+    return { emailErrors: data.emailErrors };
+  },
+
+  cancelInvite: async (inviteId) => {
+    const s = get();
+    if (!s.form) return;
+    await api.delete(`/v1/forms/${s.form.id}/invites/${inviteId}`);
+    await s.fetchInvites();
+  },
 })) 

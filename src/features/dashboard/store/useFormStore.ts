@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { FormSummary } from "../types";
 import api from "@/lib/http/internal";
+import { get } from "http";
 
 interface FormsState {
     forms: FormSummary[];
@@ -14,7 +15,7 @@ interface FormsState {
     patchFormSummary: (id: string, patch: Partial<FormSummary>) => void;
 }
 
-export const useFormsStore = create<FormsState>((set) => ({
+export const useFormsStore = create<FormsState>((set, get) => ({
     forms: [],
     isLoading: false,
     selectedFormId: null,
@@ -24,6 +25,9 @@ export const useFormsStore = create<FormsState>((set) => ({
         try {
             const response = await api.get("v1/forms");
             set({ forms: response.data });
+            if (!get().selectedFormId && response.data.length > 0) {
+                set({ selectedFormId: response.data[0].id });
+            }
         } catch (error) {
             console.error("Failed to fetch forms:", error);
         }

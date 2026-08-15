@@ -12,9 +12,19 @@ export const UpdateFormSchema = z.object({
 });
 
 
-
 export const AiGenerateSchema = z.object({
   formId: z.string().min(1).optional(),
   prompt: z.string().min(1, "Prompt is required").max(2000),
   currentSchema: FormSchemaZ,
+});
+
+export const CreateInvitesSchema = z.object({
+  emails: z
+    .array(z.string().trim().email())
+    .min(1, "Add at least one email")
+    .max(200, "Too many emails at once"),
+});
+
+export const SubmitInviteSchema = z.object({
+  values: z.record(z.string(), z.unknown()),
 });

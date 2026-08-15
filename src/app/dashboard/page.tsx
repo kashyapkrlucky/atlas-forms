@@ -10,6 +10,7 @@ import { useBuilderStore } from "@/features/dashboard/store/useBuilderStore";
 import { useEffect } from "react";
 import { RightPanel } from "@/features/dashboard/components/RightPanel";
 import { FormCanvas } from "@/features/dashboard/components/FormCanvas";
+import { InviteList } from "@/features/dashboard/components/InviteList";
 
 export default function DashboardPage() {
 
@@ -46,6 +47,7 @@ export default function DashboardPage() {
             <>
               <FormHeader />
               <FormCanvas />
+              <InviteList />
             </>
           )}
         </div>
