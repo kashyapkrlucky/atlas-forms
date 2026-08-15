@@ -5,6 +5,7 @@ import { cn } from "@/shared/utils";
 import { motion } from "framer-motion";
 import { FieldPalette } from "./FieldPalette";
 import { FieldEditor } from "./FieldEditor";
+import { AiPanel } from "./AiPanel";
 
 type Tab = "add" | "edit" | "ai";
 
@@ -52,7 +53,7 @@ export function RightPanel() {
                 <>
                     {tab === "add" && <FieldPalette />}
                     {tab === "edit" && <FieldEditor />}
-                    {tab === "ai" && <div>AI</div>}
+                    {tab === "ai" && <AiPanel />}
                 </>
             )}
         </div>
