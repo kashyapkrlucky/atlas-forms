@@ -1,0 +1,69 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  forms     Form[]
+}
+
+model Form {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  status      FormStatus   @default(DRAFT)
+  schema      Json         @default("[]")
+  userId      String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  publishedAt DateTime?
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  invites     FormInvite[]
+
+  @@index([userId])
+}
+
+model FormInvite {
+  id          String          @id @default(cuid())
+  formId      String
+  email       String
+  token       String          @unique
+  status      InviteStatus    @default(PENDING)
+  createdAt   DateTime        @default(now())
+  submittedAt DateTime?
+  form        Form            @relation(fields: [formId], references: [id], onDelete: Cascade)
+  submission  FormSubmission?
+
+  @@unique([formId, email])
+  @@index([formId])
+}
+
+model FormSubmission {
+  id                 String     @id @default(cuid())
+  inviteId           String     @unique
+  formId             String
+  values             Json
+  formSchemaSnapshot Json
+  submittedAt        DateTime   @default(now())
+  invite             FormInvite @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+
+  @@index([formId])
+}
+
+enum FormStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum InviteStatus {
+  PENDING
+  SUBMITTED
+}
