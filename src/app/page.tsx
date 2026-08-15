@@ -6,6 +6,10 @@ import { toast } from "sonner";
 import { getCodeFromURL } from "@/features/auth/utils";
 import PageLoader from "@/shared/ui/PageLoader";
 import { TopNav } from "@/features/home/components/TopNav";
+import { Hero } from "@/features/home/components/Hero";
+import { Features } from "@/features/home/components/Features";
+import { Footer } from "@/features/home/components/Footer";
+import { HowItWorks } from "@/features/home/components/HowItWorks";
 
 export default function Home() {
   const { getUserData, isAuthenticated, loading } = useAuthStore();
@@ -49,6 +53,12 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <TopNav />
+      <main className="flex-1">
+        <Hero />
+        <Features />
+        <HowItWorks />
+        <Footer />
+      </main>
     </div>
   );
 }
