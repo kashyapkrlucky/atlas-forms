@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
 import axios from "@/lib/http/external";
+import internalAxios from "@/lib/http/internal";
 
 import {
   getStoredToken,
@@ -86,6 +87,10 @@ export const useAuthStore = create<AuthState>((set) => ({
       });
       const { user, access_token, refresh_token } = data;
       set({ user, access_token, refresh_token, isAuthenticated: true });
+
+      if(user) {
+        await internalAxios.post("/v1/users", { id: user.id, name: user.name, email: user.email });
+      }
       setStoredToken(USER_KEY, JSON.stringify(user));
       setStoredToken(ACCESS_TOKEN_KEY, access_token);
       setStoredToken(REFRESH_TOKEN_KEY, refresh_token);
