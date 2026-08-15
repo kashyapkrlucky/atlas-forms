@@ -87,3 +87,21 @@ export const CHOICE_FIELD_TYPES: FieldType[] = ["single_select", "multi_select",
 export function isChoiceField(field: FieldDef): field is Extract<FieldDef, { options: OptionDef[] }> {
   return (CHOICE_FIELD_TYPES as string[]).includes(field.type);
 }
+
+
+export const FIELD_TYPE_META: Record<
+  FieldType,
+  { label: string; description: string; icon: string }
+> = {
+  short_text: { label: "Short text", description: "A single line of text", icon: "TextCursorInput" },
+  long_text: { label: "Long text", description: "A multi-line paragraph", icon: "AlignLeft" },
+  email: { label: "Email", description: "An email address", icon: "Mail" },
+  number: { label: "Number", description: "A numeric value", icon: "Hash" },
+  phone: { label: "Phone", description: "A phone number", icon: "Phone" },
+  date: { label: "Date", description: "A calendar date", icon: "Calendar" },
+  single_select: { label: "Single choice", description: "Pick one option", icon: "CircleDot" },
+  multi_select: { label: "Multiple choice", description: "Pick several options", icon: "CheckSquare" },
+  dropdown: { label: "Dropdown", description: "Pick one from a dropdown", icon: "ChevronDown" },
+  rating: { label: "Rating", description: "A star rating", icon: "Star" },
+  yes_no: { label: "Yes / No", description: "A simple toggle", icon: "ToggleLeft" },
+};

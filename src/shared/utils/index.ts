@@ -2,6 +2,7 @@ import { IUser } from "@/features/auth/types";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
+import { nanoid } from "nanoid";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -50,3 +51,15 @@ export const getInitials = (user: IUser) => {
   return "U";
 };
 
+
+export function generateInviteToken() {
+  return nanoid(32);
+}
+
+export function generateFieldId() {
+  return nanoid(10);
+}
+
+export function generateOptionId() {
+  return nanoid(8);
+}

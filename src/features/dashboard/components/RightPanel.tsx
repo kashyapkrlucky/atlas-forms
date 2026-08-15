@@ -3,6 +3,8 @@ import { useState } from "react";
 import { useBuilderStore } from "@/features/dashboard/store/useBuilderStore";
 import { cn } from "@/shared/utils";
 import { motion } from "framer-motion";
+import { FieldPalette } from "./FieldPalette";
+import { FieldEditor } from "./FieldEditor";
 
 type Tab = "add" | "edit" | "ai";
 
@@ -16,6 +18,12 @@ export function RightPanel() {
     const form = useBuilderStore((s) => s.form);
     const selectedFieldId = useBuilderStore((s) => s.selectedFieldId);
     const [tab, setTab] = useState<Tab>("add");
+    const [lastSelectedFieldId, setLastSelectedFieldId] = useState(selectedFieldId);
+
+    if (selectedFieldId !== lastSelectedFieldId) {
+        setLastSelectedFieldId(selectedFieldId);
+        if (selectedFieldId) setTab("edit");
+    }
 
     return <aside className="flex h-full w-80 shrink-0 flex-col border-l border-slate-200/70 bg-white/60 backdrop-blur-sm">
         <div className="flex gap-1 border-b border-slate-200/70 p-2">
@@ -38,15 +46,15 @@ export function RightPanel() {
             ))}
         </div>
         <div className="flex-1 overflow-y-auto p-4">
-        {!form ? (
-          <p className="mt-8 text-center text-sm text-slate-400">Select a form to start editing</p>
-        ) : (
-          <>
-            {tab === "add" && <div>Add</div>}
-            {tab === "edit" && <div>Edit</div>}
-            {tab === "ai" && <div>AI</div>}
-          </>
-        )}
-      </div>
+            {!form ? (
+                <p className="mt-8 text-center text-sm text-slate-400">Select a form to start editing</p>
+            ) : (
+                <>
+                    {tab === "add" && <FieldPalette />}
+                    {tab === "edit" && <FieldEditor />}
+                    {tab === "ai" && <div>AI</div>}
+                </>
+            )}
+        </div>
     </aside>;
 }

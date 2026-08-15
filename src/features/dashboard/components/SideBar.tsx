@@ -12,13 +12,15 @@ import { motion } from "framer-motion";
 import { Skeleton } from "@/shared/ui/Skeleton";
 import { cn } from "@/shared/utils";
 import { Badge } from "@/shared/ui/Badge";
+import { ConfirmDialog } from "@/shared/ui/ConfirmDialog";
 
 export function SideBar() {
     const [creating, setCreating] = useState(false);
     const [newTitle, setNewTitle] = useState("");
 
-    const { forms, isLoading, selectedFormId, createForm, fetchForms, selectForm } = useFormsStore();
+    const { forms, isLoading, selectedFormId, createForm, fetchForms, selectForm, deleteForm } = useFormsStore();
 
+    const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
     useEffect(() => {
         fetchForms();
     }, [fetchForms]);
@@ -33,6 +35,7 @@ export function SideBar() {
             toast.error("Couldn't create the form");
         }
     }
+    const deleteForm_ = forms.find((f) => f.id === deleteTarget);
     return (
         <aside className="flex h-full w-72 shrink-0 flex-col border-r border-slate-200/70 bg-white/60 backdrop-blur-sm">
             <Link href="/" className="flex items-center gap-2.5 px-5 pt-5 pb-4">
@@ -108,7 +111,7 @@ export function SideBar() {
                                             tabIndex={0}
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                // setDeleteTarget(form.id);
+                                                setDeleteTarget(form.id);
                                             }}
                                             className="opacity-0 group-hover:opacity-100 shrink-0 rounded-lg p-1 text-slate-300 hover:bg-rose-50 hover:text-rose-500 transition-all"
                                         >
@@ -134,6 +137,25 @@ export function SideBar() {
                     </ul>
                 )}
             </div>
+
+
+            <ConfirmDialog
+                open={!!deleteTarget}
+                onOpenChange={(open) => !open && setDeleteTarget(null)}
+                title="Delete this form?"
+                description={`"${deleteForm_?.title}" and all of its invites and submissions will be permanently deleted.`}
+                confirmLabel="Delete"
+                danger
+                onConfirm={async () => {
+                    if (!deleteTarget) return;
+                    try {
+                        await deleteForm(deleteTarget);
+                        toast.success("Form deleted");
+                    } catch {
+                        toast.error("Couldn't delete the form");
+                    }
+                }}
+            />
         </aside>
     );
 }

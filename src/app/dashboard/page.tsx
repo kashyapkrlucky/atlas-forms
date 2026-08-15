@@ -9,6 +9,7 @@ import { FormHeader } from "@/features/dashboard/components/FormHeader";
 import { useBuilderStore } from "@/features/dashboard/store/useBuilderStore";
 import { useEffect } from "react";
 import { RightPanel } from "@/features/dashboard/components/RightPanel";
+import { FormCanvas } from "@/features/dashboard/components/FormCanvas";
 
 export default function DashboardPage() {
 
@@ -44,6 +45,7 @@ export default function DashboardPage() {
           ) : (
             <>
               <FormHeader />
+              <FormCanvas />
             </>
           )}
         </div>
