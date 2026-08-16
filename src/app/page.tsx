@@ -26,6 +26,7 @@ export default function Home() {
           if (!result) {
             toast.error("Failed to complete sign in. Please try again.");
           }
+          router.push("/dashboard");
         } catch (error) {
           console.error("OAuth callback failed:", error);
           toast.error("Failed to complete sign in. Please try again.");

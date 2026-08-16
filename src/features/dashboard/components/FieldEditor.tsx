@@ -150,7 +150,7 @@ export function FieldEditor() {
                 </div>
             )}
 
-            <div className="flex items-center justify-between rounded-xl border border-slate-200 px-3.5 py-2.5">
+            <div className="flex items-center justify-between rounded-lg border border-slate-200 px-3.5 py-2.5">
                 <span className="text-sm font-medium text-slate-700">Required</span>
                 <Switch checked={field.required} onCheckedChange={(required) => patch({ required })} />
             </div>

@@ -13,11 +13,13 @@ import { Skeleton } from "@/shared/ui/Skeleton";
 import { cn } from "@/shared/utils";
 import { Badge } from "@/shared/ui/Badge";
 import { ConfirmDialog } from "@/shared/ui/ConfirmDialog";
+import { UserMenu } from "@/features/home/components/UserMenu";
+import useAuthStore from "@/features/auth/store/useAuthStore";
 
 export function SideBar() {
     const [creating, setCreating] = useState(false);
     const [newTitle, setNewTitle] = useState("");
-
+    const { user } = useAuthStore();
     const { forms, isLoading, selectedFormId, createForm, fetchForms, selectForm, deleteForm } = useFormsStore();
 
     const [deleteTarget, setDeleteTarget] = useState<string | null>(null);
@@ -87,7 +89,7 @@ export function SideBar() {
                                 <button
                                     onClick={() => selectForm(form.id)}
                                     className={cn(
-                                        "group w-full rounded-xl px-3 py-2.5 text-left transition-colors relative",
+                                        "group w-full rounded-lg px-3 py-2.5 text-left transition-colors relative",
                                         selectedFormId === form.id ? "bg-violet-50" : "hover:bg-slate-100/80"
                                     )}
                                 >
@@ -138,7 +140,9 @@ export function SideBar() {
                 )}
             </div>
 
-
+            <div className="mt-auto border-t border-slate-200/70 p-3">
+                {user && <UserMenu variant="sidebar" />}
+            </div>
             <ConfirmDialog
                 open={!!deleteTarget}
                 onOpenChange={(open) => !open && setDeleteTarget(null)}

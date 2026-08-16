@@ -71,7 +71,7 @@ export function AiPanel() {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                     >
-                        <div className="rounded-xl border border-violet-200 bg-violet-50/50 p-3.5">
+                        <div className="rounded-lg border border-violet-200 bg-violet-50/50 p-3.5">
                             <p className="text-sm text-slate-700">{suggestion.summary}</p>
                             <ul className="mt-2 flex flex-col gap-1 text-xs">
                                 {diff.added.map((f) => (
@@ -116,7 +116,7 @@ export function AiPanel() {
             </AnimatePresence>
 
             {!suggestion && (canRevert || canReapply) && (
-                <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-slate-50/60 px-3.5 py-2.5">
+                <div className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50/60 px-3.5 py-2.5">
                     <span className="flex items-center gap-1.5 text-xs text-slate-500">
                         <History className="h-3.5 w-3.5" />
                         {canRevert ? "AI changes applied" : "Reverted to before AI"}

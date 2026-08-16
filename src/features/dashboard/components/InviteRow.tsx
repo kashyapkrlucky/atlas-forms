@@ -54,7 +54,7 @@ export function InviteRow({ invite, onOpen }: { invite: InviteSummary; onOpen: (
     <motion.div
       layout
       onClick={submitted ? onOpen : undefined}
-      className={`group flex w-full items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${submitted
+      className={`group flex w-full items-center justify-between gap-3 rounded-lg border px-4 py-3 text-left transition-colors ${submitted
           ? "border-slate-200 bg-white hover:border-violet-300 hover:bg-violet-50/30 cursor-pointer"
           : "border-slate-200 bg-white/60"
         }`}

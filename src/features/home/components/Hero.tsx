@@ -46,7 +46,7 @@ export function Hero() {
       </div>
 
       <div className="animate-fade-up mt-16 flex items-center justify-center" style={{ animationDelay: "0.2s" }}>
-        <Image src="/app-home.png" alt="Hero" width={800} height={400} className="rounded-lg shadow-lg" />
+        <Image src="/app-home.png" alt="Hero" width={800} height={400} className="rounded-lg shadow-lg" loading="eager" />
       </div>
     </section>
   );

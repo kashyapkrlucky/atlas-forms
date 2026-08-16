@@ -42,7 +42,7 @@ export function FieldPalette() {
                         key={type}
                         disabled={!form}
                         onClick={() => addField(type)}
-                        className="flex flex-col items-start gap-2 rounded-xl border border-slate-200 bg-white p-3 text-left transition-all hover:border-violet-300 hover:bg-violet-50/40 hover:shadow-sm disabled:opacity-40 disabled:pointer-events-none"
+                        className="flex flex-col items-start gap-2 rounded-lg border border-slate-200 bg-white p-3 text-left transition-all hover:border-violet-300 hover:bg-violet-50/40 hover:shadow-sm disabled:opacity-40 disabled:pointer-events-none"
                     >
                         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-slate-100 text-slate-500">
                             <Icon className="h-4 w-4" />

@@ -44,10 +44,10 @@ export interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-  user: getStoredToken(USER_KEY) ? JSON.parse(getStoredToken(USER_KEY)!) : null,
-  access_token: getStoredToken(ACCESS_TOKEN_KEY),
-  refresh_token: getStoredToken(REFRESH_TOKEN_KEY),
-  isAuthenticated: !!getStoredToken(ACCESS_TOKEN_KEY),
+  user: null,
+  access_token: null,
+  refresh_token: null,
+  isAuthenticated: false,
   loading: false,
   isGuestLoading: false,
   error: null,
@@ -60,10 +60,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ loading: true });
     try {
       const token = getStoredToken(ACCESS_TOKEN_KEY);
+      const refreshToken = getStoredToken(REFRESH_TOKEN_KEY);
       const user = getStoredToken(USER_KEY);
       if (token && user) {
         set({
           access_token: token,
+          refresh_token: refreshToken,
           isAuthenticated: true,
           user: JSON.parse(user),
         });
